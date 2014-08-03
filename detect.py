@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import getopt
 import chardet
 import sys
+import argparse
 
 def usage():
     print "usage"
@@ -13,55 +13,47 @@ def main(argv):
     input_file_name = None
     output_file = sys.stdout
     output_file_name = None
-    from_codec = None
-    to_codec = None
-    auto_detect = False
-    detect_only = False
 
-    try:
-        opts, args = getopt.getopt(argv, "i:o:f:t:ad", ["input=", "output=", "from=", "to=", "auto-decect", "detect-only"])
-    except getopt.GetoptError:
-        usage()
-        sys.exit(1)
-
-    for opt, arg in opts:
-        if opt in ("-a", "--auto-decect"):
-            auto_detect = True
-        elif opt in ("-i", "--input"):
-            input_file_name = arg
-            input_file = open(arg)
-        elif opt in ("-o", "--output"):
-            output_file_name = arg
-            output_file = open(arg, 'w')
-        elif opt in ("-f", "--from"):
-            from_codec = arg
-        elif opt in ("-t", "--to"):
-            to_codec = arg
-        elif opt in ("-d", "--detect-only"):
-            detect_only = True
-
+    parser = argparse.ArgumentParser(description='detect and convert text encodings')
+    parser.add_argument('-d', '--detect-only', action="store_true", help='detect the encoding of input end exit')
+    parser.add_argument('-i', '--input', metavar='FILE', help='read from input file, or stdin instead')
+    parser.add_argument('-o', '--output', metavar='FILE', help='write to output file, or stdout instead')
+    parser.add_argument('-f', '--from', dest='decode_from', metavar='ENCODING', help='the encoding that convert from, if not given, auto detect by default')
+    parser.add_argument('-t', '--to', dest='encode_to', metavar='ENCODING', help='the encoding that convert to, if not given, UTF-8 by default')
+    parser.add_argument('-a', '--auto-detect', action="store_true", help='auto detect encoding of input')
+    args = parser.parse_args()
+    # print args
+    
+    input_file_name = args.input
+    if input_file_name is not None:
+        input_file = open(input_file_name)
     content = get_text(input_file)
 
     decect_result = chardet.detect(content)
 
-    if detect_only:
+    if args.detect_only:
         if input_file_name:
             decect_result['file'] = input_file_name
         print decect_result
         return
 
-    if not auto_detect and from_codec is None:
-        print "specify codec"
-        return
+    if args.decode_from is None:
+        args.auto_detect = True
 
-    if auto_detect:
-        from_codec = decect_result['encoding']
+    if args.auto_detect:
+        args.decode_from = decect_result['encoding']
 
-    if to_codec is None:
-        to_codec = from_codec
+    if args.encode_to is None:
+        args.encode_to = 'UTF-8'
 
-    result = content.decode(from_codec).encode(to_codec)
+    result = content.decode(args.decode_from).encode(args.encode_to)
+    
+    output_file_name = args.output
+    if output_file_name is not None:
+        output_file = open(output_file_name, 'w')
     output_file.write(result)
+
+    print >> sys.stderr, "input:%s, output:%s, from:%s, to:%s" %(input_file_name, output_file_name, args.decode_from, args.encode_to)
 
     output_file.close()
     input_file.close()
