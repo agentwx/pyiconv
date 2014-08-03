@@ -11,6 +11,13 @@ A Text Enconding Detector and Conveter in Python
 
 另外，我为了方便检测文本编码，使用了一个叫`chardet`的库。通过`pip install chardet`安装该依赖即可。
 
+如果需要批量转换，可以结合`find`和`xargs`来使用，像这样子：
+
+```
+# 批量转换文本为UTF-8格式，覆盖原文件
+find . -name "*.java" | xargs -I{} ./pyiconv -i {} -o {}
+```
+
 ```
 usage: pyiconv [-h] [-d] [-i FILE] [-o FILE] [-f ENCODING] [-t ENCODING] [-a]
 
