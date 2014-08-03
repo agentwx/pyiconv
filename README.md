@@ -7,8 +7,6 @@ A Text Enconding Detector and Conveter in Python
 
 周末早上无聊就造了一会轮子，把代码写出来了，算是iconv的Python复刻，增加了自动识别编码的功能，就当是练习用Python解析命令行参数了。
 
-用法在程序的help里，执行`pyiconv [-h|--help]`就能看到。
-
 另外，我为了方便检测文本编码，使用了一个叫`chardet`的库。通过`pip install chardet`安装该依赖即可。
 
 如果需要批量转换，可以结合`find`和`xargs`来使用，像这样子：
@@ -17,6 +15,8 @@ A Text Enconding Detector and Conveter in Python
 # 批量转换文本为UTF-8格式，覆盖原文件
 find . -name "*.java" | xargs -I{} ./pyiconv -i {} -o {}
 ```
+
+更多用法在程序的help里，执行`pyiconv [-h|--help]`就能看到。
 
 ```
 usage: pyiconv [-h] [-d] [-i FILE] [-o FILE] [-f ENCODING] [-t ENCODING] [-a]
