@@ -4,8 +4,15 @@ import chardet
 import sys
 import argparse
 
-def usage():
-    print "usage"
+def param_setting():
+    parser = argparse.ArgumentParser(description='detect and convert text encodings')
+    parser.add_argument('-d', '--detect-only', action="store_true", help='detect the encoding of input end exit')
+    parser.add_argument('-i', '--input', metavar='FILE', help='read from input file, or stdin instead')
+    parser.add_argument('-o', '--output', metavar='FILE', help='write to output file, or stdout instead')
+    parser.add_argument('-f', '--from', dest='decode_from', metavar='ENCODING', help='the encoding that convert from, if not given, auto detect by default')
+    parser.add_argument('-t', '--to', dest='encode_to', metavar='ENCODING', help='the encoding that convert to, if not given, UTF-8 by default')
+    parser.add_argument('-a', '--auto-detect', action="store_true", help='auto detect encoding of input')
+    return parser
 
 def main(argv):
 
@@ -14,15 +21,8 @@ def main(argv):
     output_file = sys.stdout
     output_file_name = None
 
-    parser = argparse.ArgumentParser(description='detect and convert text encodings')
-    parser.add_argument('-d', '--detect-only', action="store_true", help='detect the encoding of input end exit')
-    parser.add_argument('-i', '--input', metavar='FILE', help='read from input file, or stdin instead')
-    parser.add_argument('-o', '--output', metavar='FILE', help='write to output file, or stdout instead')
-    parser.add_argument('-f', '--from', dest='decode_from', metavar='ENCODING', help='the encoding that convert from, if not given, auto detect by default')
-    parser.add_argument('-t', '--to', dest='encode_to', metavar='ENCODING', help='the encoding that convert to, if not given, UTF-8 by default')
-    parser.add_argument('-a', '--auto-detect', action="store_true", help='auto detect encoding of input')
+    parser = param_setting()
     args = parser.parse_args()
-    # print args
     
     input_file_name = args.input
     if input_file_name is not None:
