@@ -10,7 +10,7 @@ def param_setting():
     parser.add_argument('-i', '--input', metavar='FILE', help='read from input file, or stdin instead')
     parser.add_argument('-o', '--output', metavar='FILE', help='write to output file, or stdout instead')
     parser.add_argument('-f', '--from', dest='decode_from', metavar='ENCODING', help='the encoding that convert from, if not given, auto detect by default')
-    parser.add_argument('-t', '--to', dest='encode_to', metavar='ENCODING', help='the encoding that convert to, if not given, UTF-8 by default')
+    parser.add_argument('-t', '--to', dest='encode_to', default='UTF-8', metavar='ENCODING', help='the encoding that convert to, if not given, UTF-8 by default')
     parser.add_argument('-a', '--auto-detect', action="store_true", help='auto detect encoding of input')
     return parser
 
@@ -42,9 +42,6 @@ def main(argv):
 
     if args.auto_detect:
         args.decode_from = decect_result['encoding']
-
-    if args.encode_to is None:
-        args.encode_to = 'UTF-8'
 
     result = content.decode(args.decode_from).encode(args.encode_to)
     
