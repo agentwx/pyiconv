@@ -7,14 +7,14 @@ import argparse
 def param_setting():
     parser = argparse.ArgumentParser(description='detect and convert text encodings')
     parser.add_argument('-d', '--detect-only', action="store_true", help='detect the encoding of input end exit')
-    parser.add_argument('-i', '--input', metavar='FILE', help='read from input file, or stdin instead')
-    parser.add_argument('-o', '--output', metavar='FILE', help='write to output file, or stdout instead')
+    parser.add_argument('-i', '--input', metavar='FILE', help='read from input file, if not given, use stdin by default')
+    parser.add_argument('-o', '--output', metavar='FILE', help='write to output file, if not given, use stdout by default')
     parser.add_argument('-f', '--from', dest='decode_from', metavar='ENCODING', help='the encoding that convert from, if not given, auto detect by default')
     parser.add_argument('-t', '--to', dest='encode_to', default='UTF-8', metavar='ENCODING', help='the encoding that convert to, if not given, UTF-8 by default')
     parser.add_argument('-a', '--auto-detect', action="store_true", help='auto detect encoding of input')
     return parser
 
-def main(argv):
+def main():
 
     input_file = sys.stdin
     input_file_name = None
@@ -62,4 +62,4 @@ def get_text(input_file):
     return content
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main()
