@@ -29,8 +29,6 @@ def main():
         input_file = open(input_file_name)
     content = input_file.read()
 
-    print content
-
     decect_result = chardet.detect(content)
 
     if args.detect_only:
