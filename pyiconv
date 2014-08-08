@@ -30,6 +30,7 @@ def main():
     content = input_file.read()
 
     decect_result = chardet.detect(content)
+    
 
     if args.detect_only:
         if input_file_name:
@@ -41,6 +42,10 @@ def main():
         args.auto_detect = True
 
     if args.auto_detect:
+        if decect_result['confidence'] < 0.8:
+            print >> sys.stderr, decect_result
+            print >> sys.stderr, "auto detect encodings fail, please give an encoding clearly"
+            sys.exit(1)
         args.decode_from = decect_result['encoding']
 
     result = content.decode(args.decode_from).encode(args.encode_to)
